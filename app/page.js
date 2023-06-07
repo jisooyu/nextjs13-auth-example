@@ -1,12 +1,39 @@
 'use client'
-import { signIn, signOut } from 'next-auth/react'
-import Link from 'next/link'
-
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react'
 
 export default function Home() {
+  const { data: session, status } = useSession()
+  const loading = status === "loading"
+
   return (
-    <h1 className='flex justify-center items-center p-5 text-green-500 text-lg font-bold'>
-      This is The Home Page! Everyone can see it.
-    </h1>
+    <div >
+      <Head>
+        <title>Nextjs | Next-Auth</title>
+      </Head>
+      <main >
+        <h1 className='m-4'>Authentication in Next.js app using Next-Auth</h1>
+        <div>
+           {loading && <div >Loading...</div>}
+           {
+            session &&
+              <>
+               <p style={{ marginBottom: '10px' }}> Welcome, {session.user.name ?? session.user.email}</p> <br />
+               <Image src={session.user.image} alt="user"  width={200} height={200} />
+              </>
+            }
+           {
+            !session &&
+              <div className='m-4 p-2'>
+               <p >Please Sign in</p>
+              <Image src="/waiting-signin.jpeg" alt="waiting" width={500} height={500} />
+              <p>GIF by  <Link href="https://dribbble.com/shots/17658258-Couple-waiting-for-flight-illustration">Waiting for Sigin</Link> </p>
+            </div>
+           }
+         </div>
+      </main>
+    </div>
   )
 }

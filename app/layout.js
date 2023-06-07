@@ -1,16 +1,16 @@
 "use client";
 import './globals.css'
-import { SessionProvider } from "next-auth/react";
-import AppBar from "./AppBar";
+import Provider from '@/components/Provider';
+import AppBar from '@/components/AppBar';
 
 export default function RootLayout({ children } ) {
   return (
     <html lang="en">
       <body>
-        <SessionProvider>
+        <Provider>
           <AppBar />
-          <div className={"  h-screen "}>{children}</div>
-        </SessionProvider>
+          <div className={"h-screen "}>{children}</div>
+        </Provider>
       </body>
     </html>
   );
