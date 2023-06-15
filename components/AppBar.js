@@ -2,19 +2,9 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image';
 import Link from "next/link";
-import { useSession, signIn, signOut, getProviders } from 'next-auth/react'
-
+import { useSession, signIn, signOut} from 'next-auth/react'
 const AppBar = () => {
   const { data: session } = useSession();
-  const [providers, setProviders] = useState(null);
-
-    useEffect(() => {
-        const setUpProviders = async () => {
-          const response = await getProviders()
-            setProviders(response)
-        }
-        setUpProviders()
-    }, []);
   return (  
     <nav className='nav_header'>
       <div className='flex gap-2 flex-col sm:flex-row'>
