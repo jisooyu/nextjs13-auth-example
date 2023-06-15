@@ -1,35 +1,56 @@
 'use client'
+import { useState, useEffect } from 'react'
+import Image from 'next/image';
 import Link from "next/link";
-import { useSession, signIn, signOut } from 'next-auth/react'
-import MenuItems from "./MenuItems";
+import { useSession, signIn, signOut, getProviders } from 'next-auth/react'
 
 const AppBar = () => {
-      const { data: session } = useSession();
+  const { data: session } = useSession();
+  const [providers, setProviders] = useState(null);
 
-  const handleSignin = (e) => {
-    e.preventDefault()
-    signIn()
-  }
-
-  const handleSignout = (e) => {
-    e.preventDefault()
-    signOut()
-  }
-
-  return (
-    <div className="bg-gradient-to-b from-cyan-50 to-cyan-200 p-2 flex gap-2">
-            <Link className="text-sky-600 hover:text-sky-700" href={"/"}>
-                Home
-            </Link>
-            <Link className="text-sky-600 hover:text-sky-700" href={"/admin/panel"}>
-                Panel
+    useEffect(() => {
+        const setUpProviders = async () => {
+          const response = await getProviders()
+            setProviders(response)
+        }
+        setUpProviders()
+    }, []);
+  return (  
+    <nav className='nav_header'>
+      <div className='flex gap-2 flex-col sm:flex-row'>
+          <Link className="text-slate-100 hover:text-sky-400" href="/">
+            Home
           </Link>
-        {session && <Link href="#" onClick={handleSignout} className="text-sky-600 hover:text-sky-700" >Sign out</Link>  }
-      {!session && <Link href="#" onClick={handleSignin} className="text-sky-600 hover:text-sky-700" >Sign in</Link>}
-            <div className="text-sky-600 hover:text-sky-700">
-              <MenuItems  />
+          <Link className="text-slate-100 hover:text-sky-400" href="/admin">
+            Admin
+          </Link>
+      </div>
+      {/* Desktop Navigation */}
+      <>
+        {session ? (
+          <div className='flex'>
+              <div className='flex gap-3'>
+                <Image
+                  src={session.user.image}
+                  alt='userimage'
+                  width={40}
+                  height={40}
+                  className='rounded-full object-contain hidden sm:block'
+                />
+              <button type="button" onClick={() => signOut({ callbackUrl: '/' })} className="text-slate-100 hover:text-sky-400" >
+                  Sign out
+                </button>
+              </div>
             </div>
-    </div>
+            ): (
+            <>
+              {
+                <p className='text-slate-100 hover:text-sky-400' onClick={() => signIn({ callbackUrl: '/' })}>Sign In</p>
+              }
+            </>
+        )}
+      </>
+      </nav>
   )
 }
 
