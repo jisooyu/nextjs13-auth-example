@@ -12,7 +12,7 @@ const AppBar = () => {
           </Link>
           <Link className="text-slate-100 hover:text-sky-400" href="/admin">
             Admin
-          </Link>
+        </Link>
       </div>
       {/* Desktop Navigation */}
       <>
